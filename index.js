@@ -68,6 +68,29 @@ async function run() {
         res.send(result)
     })
 
+    //myToys
+    
+    app.get('/myToys/:text', async (req, res) => {
+        const user = req.params.text;
+        const query = { sellerName: user };
+        
+        try {
+          const result = await userToysCollection.find(query).toArray();
+          res.send(result);
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+      });
+
+      //delete myToys
+
+      app.delete('/myToys/:id', async(req,res)=>{
+        const id=req.params.id
+        const query ={_id: new ObjectId(id)}
+        const result = await userToysCollection.deleteOne(query);
+        res.send(result)
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
