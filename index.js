@@ -54,7 +54,23 @@ async function run() {
         const result=await userToysCollection.find({}).toArray()
         res.send(result)
     })
+     
+    //search
+    app.get('/userToys/:text', async(req,res)=>{
+      const user = req.params.text;
+      console.log(user)
+      const query = { name: { $regex: `^${user}$`, $options: 'i' } };
+        
+      try {
+        const result = await userToysCollection.find(query).toArray();
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    })
 
+    
     app.get('/userToys/:id', async(req,res)=>{
         const id=req.params.id
         const query ={_id: new ObjectId(id)}
